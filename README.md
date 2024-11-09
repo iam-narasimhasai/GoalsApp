@@ -1,3 +1,3 @@
-<center>Todo app for practice</center>
+Todo app
 
 ![p1](docker.png)
