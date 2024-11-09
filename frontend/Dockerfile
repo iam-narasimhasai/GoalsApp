@@ -1,4 +1,4 @@
-FROM node:23-alpine3.19
+FROM node:14
 
 WORKDIR /app
 
@@ -7,6 +7,8 @@ COPY package*.json .
 RUN npm install
 
 COPY . .
+
+ENV REACT_APP_API_URL http://localhost:321/goals
 
 EXPOSE 3000
 

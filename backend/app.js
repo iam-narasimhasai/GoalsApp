@@ -94,7 +94,7 @@ if (!mongoUrl) {
 }
 
 console.log('Using MongoDB connection string:', mongoUrl); // Log the connection string (for debugging)
-
+const port = process.env.PORT || 321;  // Fallback to 3000 if PORT is not set
 mongoose.connect(
   mongoUrl, 
   {
@@ -107,8 +107,8 @@ mongoose.connect(
       console.error(err);
     } else {
       console.log('CONNECTED TO MONGODB');
-      app.listen(321, () => {
-        console.log('Server is running on port 321');
+      app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
       });
     }
   }
