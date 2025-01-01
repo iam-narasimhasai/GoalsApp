@@ -1,4 +1,4 @@
-name: Solar System Workflow
+name: GOAL
 
 on:
   workflow_dispatch:
@@ -32,4 +32,6 @@ jobs:
             npm install
 
       - name: Run Unit Tests for backend app
-        run: npm test
+        run: |
+            pwd
+            npm test
