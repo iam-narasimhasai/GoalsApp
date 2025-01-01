@@ -1,7 +1,9 @@
 name: Solar System Workflow
 
 on:
-  workflow_dispatch
+  push:
+  workflow_dispatch:
+
 
 env:
   MONGO_URL: ${{ secrets.MONGO_URL }}
