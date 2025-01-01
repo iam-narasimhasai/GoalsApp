@@ -36,5 +36,6 @@ jobs:
       - name: Run Unit Tests for backend app
         run: |
           ls -ltra
+          cd backend/
           pwd
           npm test
