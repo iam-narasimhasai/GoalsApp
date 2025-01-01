@@ -25,6 +25,10 @@ jobs:
         with:
           node-version: '18'
 
+      - name: going to backend folder
+        run: |
+            ls -ltra
+
       - name: Install Dependencies
         run: |
             cd GoalsApp/backend/
