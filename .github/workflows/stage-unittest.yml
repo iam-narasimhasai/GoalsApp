@@ -29,11 +29,12 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd GoalsApp/backend/
+          cd backend/
           pwd
           npm install
 
       - name: Run Unit Tests for backend app
         run: |
+          ls -ltra
           pwd
           npm test
