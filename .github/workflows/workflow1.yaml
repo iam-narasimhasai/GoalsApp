@@ -28,6 +28,7 @@ jobs:
       - name: Install Dependencies
         run: |
             cd backend/
+            pwd
             npm install
 
       - name: Run Unit Tests for backend app
