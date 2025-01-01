@@ -8,13 +8,16 @@ function App() {
   const [loadedGoals, setLoadedGoals] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const apiUrl = process.env.REACT_APP_API_URL; // Updated variable
+
+ // console.log(apiUrl); // This should log the correct API URL
 
   useEffect(function () {
     async function fetchData() {
       setIsLoading(true);
 
       try {
-        const response = await fetch('http://localhost/goals');
+        const response = await fetch(apiUrl); // Use apiUrl here
 
         const resData = await response.json();
 
@@ -26,20 +29,20 @@ function App() {
       } catch (err) {
         setError(
           err.message ||
-            'Fetching goals failed - the server responsed with an error.'
+            'Fetching goals failed - the server responded with an error.'
         );
       }
       setIsLoading(false);
     }
 
     fetchData();
-  }, []);
+  }, [apiUrl]); // Added apiUrl as a dependency
 
   async function addGoalHandler(goalText) {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost/goals', {
+      const response = await fetch(apiUrl, { // Use apiUrl here
         method: 'POST',
         body: JSON.stringify({
           text: goalText,
@@ -68,7 +71,7 @@ function App() {
     } catch (err) {
       setError(
         err.message ||
-          'Adding a goal failed - the server responsed with an error.'
+          'Adding a goal failed - the server responded with an error.'
       );
     }
     setIsLoading(false);
@@ -78,7 +81,7 @@ function App() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost/goals/' + goalId, {
+      const response = await fetch(`${apiUrl}/${goalId}`, { // Use apiUrl here
         method: 'DELETE',
       });
 
@@ -95,7 +98,7 @@ function App() {
     } catch (err) {
       setError(
         err.message ||
-          'Deleting the goal failed - the server responsed with an error.'
+          'Deleting the goal failed - the server responded with an error.'
       );
     }
     setIsLoading(false);

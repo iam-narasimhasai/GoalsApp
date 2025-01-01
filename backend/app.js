@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
-
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
+
+// Load environment variables from .env file
+require('dotenv').config(); 
 
 const Goal = require('./models/goal');
 
@@ -64,7 +66,7 @@ app.post('/goals', async (req, res) => {
       .json({ message: 'Goal saved', goal: { id: goal.id, text: goalText } });
     console.log('STORED NEW GOAL');
   } catch (err) {
-    console.error('ERROR FETCHING GOALS');
+    console.error('ERROR SAVING GOAL');
     console.error(err.message);
     res.status(500).json({ message: 'Failed to save goal.' });
   }
@@ -77,14 +79,24 @@ app.delete('/goals/:id', async (req, res) => {
     res.status(200).json({ message: 'Deleted goal!' });
     console.log('DELETED GOAL');
   } catch (err) {
-    console.error('ERROR FETCHING GOALS');
+    console.error('ERROR DELETING GOAL');
     console.error(err.message);
     res.status(500).json({ message: 'Failed to delete goal.' });
   }
 });
 
+// Use the MongoDB URL from the environment variable
+const mongoUrl = process.env.MONGO_URL; // Use the MONGO_URL from .env
+
+if (!mongoUrl) {
+  console.error('MONGO_URL is not defined in .env');
+  process.exit(1); // Exit the application if MONGO_URL is not set
+}
+
+console.log('Using MongoDB connection string:', mongoUrl); // Log the connection string (for debugging)
+const port = process.env.PORT || 321;  // Fallback to 3000 if PORT is not set
 mongoose.connect(
-  'mongodb://localhost:27017/course-goals',
+  mongoUrl, 
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -95,7 +107,9 @@ mongoose.connect(
       console.error(err);
     } else {
       console.log('CONNECTED TO MONGODB');
-      app.listen(80);
+      app.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+      });
     }
   }
 );
