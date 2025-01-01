@@ -21,17 +21,17 @@ jobs:
         with:
           node-version: '18'
 
-      - name: going to backend folder
+      - name: Going to backend folder
         run: |
-            ls -ltra
+          ls -ltra
 
       - name: Install Dependencies
         run: |
-            cd GoalsApp/backend/
-            pwd
-            npm install
+          cd GoalsApp/backend/
+          pwd
+          npm install
 
       - name: Run Unit Tests for backend app
         run: |
-            pwd
-            npm test
+          pwd
+          npm test
