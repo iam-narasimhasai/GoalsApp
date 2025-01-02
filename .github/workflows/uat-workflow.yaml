@@ -6,8 +6,8 @@ on:
 
 
 env:
-  MONGO_URL: ${{ secrets.MONGO_URL }}
-  PORT: ${{ vars.PORT }}
+  MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"
+  PORT: "321"
 
 jobs:
   unit-testing:
