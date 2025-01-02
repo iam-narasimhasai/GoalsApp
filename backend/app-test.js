@@ -19,15 +19,10 @@ describe("Goals API Suite", () => {
    * Test the GET /goals route
    */
   describe("GET /goals", () => {
-    it("it should fetch all goals (initially empty)", (done) => {
-      chai
-        .request(server)
-        .get("/goals")
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.property("goals").that.is.an("array").that.is.empty;
-          done();
-        });
+    it("it should fetch all goals (initially empty)", async () => {
+      const res = await chai.request(server).get("/goals");
+      res.should.have.status(200);
+      res.body.should.have.property("goals").that.is.an("array").that.is.empty;
     });
   });
 
@@ -35,31 +30,19 @@ describe("Goals API Suite", () => {
    * Test the POST /goals route
    */
   describe("POST /goals", () => {
-    it("it should create a new goal", (done) => {
+    it("it should create a new goal", async () => {
       const goal = { text: "Learn unit testing" };
-      chai
-        .request(server)
-        .post("/goals")
-        .send(goal)
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.have.property("goal");
-          res.body.goal.should.have.property("text").eql(goal.text);
-          done();
-        });
+      const res = await chai.request(server).post("/goals").send(goal);
+      res.should.have.status(201);
+      res.body.should.have.property("goal");
+      res.body.goal.should.have.property("text").eql(goal.text);
     });
 
-    it("it should not create a goal without text", (done) => {
+    it("it should not create a goal without text", async () => {
       const goal = { text: "" };
-      chai
-        .request(server)
-        .post("/goals")
-        .send(goal)
-        .end((err, res) => {
-          res.should.have.status(422);
-          res.body.should.have.property("message").eql("Invalid goal text.");
-          done();
-        });
+      const res = await chai.request(server).post("/goals").send(goal);
+      res.should.have.status(422);
+      res.body.should.have.property("message").eql("Invalid goal text.");
     });
   });
 
@@ -67,18 +50,12 @@ describe("Goals API Suite", () => {
    * Test the DELETE /goals/:id route
    */
   describe("DELETE /goals/:id", () => {
-    it("it should delete a goal", (done) => {
+    it("it should delete a goal", async () => {
       const goal = new mongoose.model("Goal")({ text: "Goal to delete" });
-      goal.save((err, savedGoal) => {
-        chai
-          .request(server)
-          .delete(`/goals/${savedGoal.id}`)
-          .end((err, res) => {
-            res.should.have.status(200);
-            res.body.should.have.property("message").eql("Deleted goal!");
-            done();
-          });
-      });
+      const savedGoal = await goal.save();
+      const res = await chai.request(server).delete(`/goals/${savedGoal.id}`);
+      res.should.have.status(200);
+      res.body.should.have.property("message").eql("Deleted goal!");
     });
   });
 });
