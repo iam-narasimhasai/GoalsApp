@@ -2,6 +2,9 @@ name: workflow testing
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - stage
 
 env:
   MONGO_URL: ${{ secrets.MONGO_URL }}  # Ensure this is set correctly in GitHub Secrets
