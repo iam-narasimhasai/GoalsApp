@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="2.852" tests="4" failures="4">
+  <testsuite name="Root Suite" timestamp="2025-01-02T16:41:21" tests="0" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="Goals API Suite" timestamp="2025-01-02T16:41:21" tests="0" file="C:\GoalsApp\backend\app-test.js" time="0.000" failures="0">
+  </testsuite>
+  <testsuite name="GET /goals" timestamp="2025-01-02T16:41:24" tests="1" file="C:\GoalsApp\backend\app-test.js" time="0.004" failures="1">
+    <testcase name="Goals API Suite GET /goals it should fetch all goals (initially empty)" time="0.001" classname="it should fetch all goals (initially empty)">
+      <failure message="app.address is not a function" type="TypeError"><![CDATA[TypeError: app.address is not a function
+    at serverAddress (node_modules\chai-http\lib\request.js:282:18)
+    at new Test (node_modules\chai-http\lib\request.js:271:53)
+    at obj.<computed> [as get] (node_modules\chai-http\lib\request.js:239:14)
+    at Context.<anonymous> (app-test.js:25:10)
+    at process.processImmediate (node:internal/timers:483:21)]]></failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="POST /goals" timestamp="2025-01-02T16:41:24" tests="2" file="C:\GoalsApp\backend\app-test.js" time="0.001" failures="2">
+    <testcase name="Goals API Suite POST /goals it should create a new goal" time="0.000" classname="it should create a new goal">
+      <failure message="app.address is not a function" type="TypeError"><![CDATA[TypeError: app.address is not a function
+    at serverAddress (node_modules\chai-http\lib\request.js:282:18)
+    at new Test (node_modules\chai-http\lib\request.js:271:53)
+    at obj.<computed> [as post] (node_modules\chai-http\lib\request.js:239:14)
+    at Context.<anonymous> (app-test.js:42:10)
+    at process.processImmediate (node:internal/timers:483:21)]]></failure>
+    </testcase>
+    <testcase name="Goals API Suite POST /goals it should not create a goal without text" time="0.000" classname="it should not create a goal without text">
+      <failure message="app.address is not a function" type="TypeError"><![CDATA[TypeError: app.address is not a function
+    at serverAddress (node_modules\chai-http\lib\request.js:282:18)
+    at new Test (node_modules\chai-http\lib\request.js:271:53)
+    at obj.<computed> [as post] (node_modules\chai-http\lib\request.js:239:14)
+    at Context.<anonymous> (app-test.js:56:10)
+    at process.processImmediate (node:internal/timers:483:21)]]></failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="DELETE /goals/:id" timestamp="2025-01-02T16:41:24" tests="1" file="C:\GoalsApp\backend\app-test.js" time="0.093" failures="1">
+    <testcase name="Goals API Suite DELETE /goals/:id it should delete a goal" time="0.090" classname="it should delete a goal">
+      <failure message="app.address is not a function" type="TypeError"><![CDATA[TypeError: app.address is not a function
+    at serverAddress (node_modules\chai-http\lib\request.js:282:18)
+    at new Test (node_modules\chai-http\lib\request.js:271:53)
+    at obj.<computed> (node_modules\chai-http\lib\request.js:239:14)
+    at C:\GoalsApp\backend\app-test.js:75:18
+    at C:\GoalsApp\backend\node_modules\mongoose\lib\model.js:5082:18
+    at process.processTicksAndRejections (node:internal/process/task_queues:77:11)]]></failure>
+    </testcase>
+  </testsuite>
+</testsuites>
