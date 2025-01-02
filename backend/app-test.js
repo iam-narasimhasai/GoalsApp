@@ -9,9 +9,15 @@ chai.use(chaiHttp);
 describe("Goals API Suite", () => {
   // Before tests, ensure the database is clean
   before(async () => {
+    // Ensure `done()` is called only once
     try {
-      // Wait for the database to be cleaned up before running tests
-      await mongoose.connection.collections.goals.drop().catch(() => {}); // Ignore if the collection doesn't exist
+      // Drop the collection, and handle the case where it doesn't exist
+      await mongoose.connection.collections.goals.drop().catch((err) => {
+        // If the collection doesn't exist, we silently ignore the error
+        if (err && err.code !== 26) {
+          console.error("Error during collection drop:", err);
+        }
+      });
     } catch (error) {
       console.error("Error cleaning up the database:", error);
     }
