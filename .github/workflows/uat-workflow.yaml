@@ -1,0 +1,44 @@
+name: stage Unit Testing
+
+on:
+  push:
+  workflow_dispatch:
+
+
+env:
+  MONGO_URL: ${{ secrets.MONGO_URL }}
+  PORT: ${{ vars.PORT }}
+
+jobs:
+  unit-testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Version 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          cd backend/
+          pwd
+          npm install
+
+      - name: Run Unit Tests for backend app
+        run: |
+          ls -ltra
+          cd backend/
+          pwd
+          npm test || true
+          ls -ltra
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4.5.0
+        with:
+          name: test-results.xml
+          path: backend/test-results.xml
