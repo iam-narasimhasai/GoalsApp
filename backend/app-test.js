@@ -30,7 +30,7 @@ describe("Goals API Suite", () => {
           done();
         });
     });
-  }); 
+  });
 
   /**
    * Test the POST /goals route
