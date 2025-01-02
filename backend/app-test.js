@@ -9,8 +9,12 @@ chai.use(chaiHttp);
 describe("Goals API Suite", () => {
   // Before tests, ensure the database is clean
   before(async () => {
-    // Wait for the database to be cleaned up before running tests
-    await mongoose.connection.collections.goals.drop().catch(() => {}); // Ignore if the collection doesn't exist
+    try {
+      // Wait for the database to be cleaned up before running tests
+      await mongoose.connection.collections.goals.drop().catch(() => {}); // Ignore if the collection doesn't exist
+    } catch (error) {
+      console.error("Error cleaning up the database:", error);
+    }
   });
 
   /**
