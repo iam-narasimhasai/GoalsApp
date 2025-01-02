@@ -38,4 +38,4 @@ jobs:
           ls -ltra
           cd backend/
           pwd
-          npm test
+          npm run test
