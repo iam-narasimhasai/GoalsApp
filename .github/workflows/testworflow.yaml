@@ -7,8 +7,8 @@ on:
       - stage
 
 env:
-  MONGO_URL: ${{ secrets.MONGO_URL }}  # Ensure this is set correctly in GitHub Secrets
-  PORT: ${{ vars.PORT }}
+  MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"  # Ensure this is set correctly in GitHub Secrets
+  PORT: "321"
 
 jobs:
   unit-testing:
