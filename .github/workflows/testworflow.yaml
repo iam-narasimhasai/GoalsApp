@@ -1,0 +1,40 @@
+name: workflow testing
+
+on:
+  workflow_dispatch:
+
+env:
+  MONGO_URL: ${{ secrets.MONGO_URL }}  # Ensure this is set correctly in GitHub Secrets
+
+jobs:
+  unit-testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Version 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Verify MONGO_URL environment variable
+        run: |
+          if [ -z "$MONGO_URL" ]; then
+            echo "MONGO_URL is not set. Exiting..."
+            exit 1
+          else
+            echo "MONGO_URL is set to $MONGO_URL"
+          fi
+
+      - name: Install Dependencies
+        run: |
+          cd backend/
+          npm install
+
+      - name: Run Unit Tests for backend app
+        run: |
+          cd backend/
+          npm test

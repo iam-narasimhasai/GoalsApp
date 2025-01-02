@@ -7,70 +7,50 @@ chai.should();
 chai.use(chaiHttp);
 
 describe("Goals API Suite", () => {
-  // Before tests, ensure the database is clean
+
   before(async () => {
-    if (mongoose.connection.collections.goals) {
-      await mongoose.connection.collections.goals.drop().catch(err => {
-        console.log("Error dropping goals collection: ", err); // Handle any potential errors here
+    // Ensure MongoDB is connected before running tests
+    console.log("Using MongoDB connection string:", process.env.MONGO_URL);
+    try {
+      await mongoose.connect(process.env.MONGO_URL, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
       });
+      console.log("CONNECTED TO MONGODB");
+    } catch (error) {
+      console.error("MongoDB connection error:", error);
+      throw error; // This will fail the test if connection fails
     }
   });
 
-  /**
-   * Test the GET /goals route
-   */
   describe("GET /goals", () => {
-    it("it should fetch all goals (initially empty)", (done) => {
-      chai
-        .request(server)
-        .get("/goals")
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.body.should.have.property("goals").that.is.an("array").that.is.empty;
-          done();
-        });
+    it("should fetch all goals (initially empty)", async () => {
+      const res = await chai.request(server).get("/goals");
+      res.should.have.status(200);
+      res.body.should.have.property("goals").that.is.an("array").that.is.empty;
     });
   });
 
-  /**
-   * Test the POST /goals route
-   */
   describe("POST /goals", () => {
-    it("it should create a new goal", (done) => {
+    it("should create a new goal", async () => {
       const goal = { text: "Learn unit testing" };
-      chai
-        .request(server)
-        .post("/goals")
-        .send(goal)
-        .end((err, res) => {
-          res.should.have.status(201);
-          res.body.should.have.property("goal");
-          res.body.goal.should.have.property("text").eql(goal.text);
-          done();
-        });
+      const res = await chai.request(server).post("/goals").send(goal);
+      res.should.have.status(201);
+      res.body.should.have.property("goal");
+      res.body.goal.should.have.property("text").eql(goal.text);
     });
 
-    it("it should not create a goal without text", (done) => {
+    it("should not create a goal without text", async () => {
       const goal = { text: "" };
-      chai
-        .request(server)
-        .post("/goals")
-        .send(goal)
-        .end((err, res) => {
-          res.should.have.status(422);
-          res.body.should.have.property("message").eql("Invalid goal text.");
-          done();
-        });
+      const res = await chai.request(server).post("/goals").send(goal);
+      res.should.have.status(422);
+      res.body.should.have.property("message").eql("Invalid goal text.");
     });
   });
 
-  /**
-   * Test the DELETE /goals/:id route
-   */
   describe("DELETE /goals/:id", () => {
-    it("it should delete a goal", async () => {
-      const Goal = mongoose.model("Goal");
-      const goal = new Goal({ text: "Goal to delete" });
+    it("should delete a goal", async () => {
+      const goal = new mongoose.model("Goal")({ text: "Goal to delete" });
       const savedGoal = await goal.save();
       const res = await chai.request(server).delete(`/goals/${savedGoal.id}`);
       res.should.have.status(200);
