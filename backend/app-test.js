@@ -1,7 +1,6 @@
 let mongoose = require("mongoose");
 let server = require("./app");
 let chai = require("chai");
-//let chaiHttp = require("chai-http");
 const chaiHttp = require('chai-http'); // Correct for CommonJS
 
 chai.should();
@@ -9,10 +8,9 @@ chai.use(chaiHttp);
 
 describe("Goals API Suite", () => {
   // Before tests, ensure the database is clean
-  before((done) => {
-    mongoose.connection.collections.goals.drop(() => {
-      done();
-    });
+  before(async () => {
+    // Wait for the database to be cleaned up before running tests
+    await mongoose.connection.collections.goals.drop().catch(() => {}); // Ignore if the collection doesn't exist
   });
 
   /**
