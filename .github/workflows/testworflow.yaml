@@ -8,7 +8,8 @@ on:
 
 env:
   MONGO_URL: ${{ secrets.MONGO_URL }}  # Ensure this is set correctly in GitHub Secrets
-
+  PORT: ${{ vars.PORT }}
+  
 jobs:
   unit-testing:
     name: Unit Testing
