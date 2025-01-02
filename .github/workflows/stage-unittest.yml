@@ -1,7 +1,6 @@
 name: stage Unit Testing
 
 on:
-  push:
   workflow_dispatch:
 
 
@@ -38,4 +37,4 @@ jobs:
           ls -ltra
           cd backend/
           pwd
-          npm run test
+          npm test
