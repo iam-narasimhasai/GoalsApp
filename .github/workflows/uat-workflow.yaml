@@ -38,7 +38,7 @@ jobs:
           pwd
           npm run test
           ls -ltra
-        continue-on-error: false
+        
 
       - name: Upload Artifact
         if: always()
