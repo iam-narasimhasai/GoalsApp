@@ -6,7 +6,7 @@ on:
 
 env:
   MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"
-  PORT: "3000"
+  PORT: "321"
 
 permissions:
   contents: write
@@ -31,6 +31,8 @@ jobs:
           pwd
           npm install
       - name: Run Unit Test for backend app
+        env:
+          PORT: 321
         run: |
           ls -ltra
           cd backend/
