@@ -1,13 +1,15 @@
-name: stage Unit Testing
+name: Stage Unit Testing
 
 on:
   push:
   workflow_dispatch:
 
-
 env:
   MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"
   PORT: "321"
+
+permissions:
+  contents: write
 
 jobs:
   unit-testing:
@@ -27,18 +29,22 @@ jobs:
         run: |
           cd backend/
           pwd
-          sudo npm install
+          npm install
 
       - name: Run Unit Tests for backend app
         run: |
           ls -ltra
           cd backend/
           pwd
-          sudo npm run test
+          npm run test
           ls -ltra
+        continue-on-error: false
 
-      - name: upload artifact
-        uses: actions/upload-artifact@v4.5.0
+      - name: Upload Artifact
+        if: always()
+        uses: actions/upload-artifact@v3
         with:
-          name: test-results.xml
-          path: backend/test-results.xml
+          name: test-results
+          path: |
+            backend/test-results.xml
+          if-no-files-found: ignore
