@@ -1,0 +1,48 @@
+name: Test Unit Testing
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"
+  PORT: "321"
+
+permissions:
+  contents: write
+
+jobs:
+  unit-testing:
+    name: Unit Testing
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Version 18
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: |
+          cd backend/
+          pwd
+          npm install
+      - name: Run Unit Test for backend app
+        run: |
+          ls -ltra
+          cd backend/
+          pwd
+          npm run test -- --verbose
+          ls -ltra
+        
+      - name: Upload Artifact
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: |
+            backend/test-results.xml
+          if-no-files-found: ignore
