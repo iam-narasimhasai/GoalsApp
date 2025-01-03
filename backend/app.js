@@ -1,14 +1,10 @@
-const fs = require('fs');
-const path = require('path');
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-
-// Load environment variables from .env file
-require('dotenv').config(); 
-
+const fs = require('fs');
+const path = require('path');
 const Goal = require('./models/goal');
+require('dotenv').config(); 
 
 const app = express();
 
@@ -29,7 +25,6 @@ app.use((req, res, next) => {
 });
 
 app.get('/goals', async (req, res) => {
-  console.log('TRYING TO FETCH GOALS');
   try {
     const goals = await Goal.find();
     res.status(200).json({
@@ -38,78 +33,66 @@ app.get('/goals', async (req, res) => {
         text: goal.text,
       })),
     });
-    console.log('FETCHED GOALS');
   } catch (err) {
-    console.error('ERROR FETCHING GOALS');
-    console.error(err.message);
     res.status(500).json({ message: 'Failed to load goals.' });
   }
 });
 
 app.post('/goals', async (req, res) => {
-  console.log('TRYING TO STORE GOAL');
   const goalText = req.body.text;
 
   if (!goalText || goalText.trim().length === 0) {
-    console.log('INVALID INPUT - NO TEXT');
     return res.status(422).json({ message: 'Invalid goal text.' });
   }
 
-  const goal = new Goal({
-    text: goalText,
-  });
+  const goal = new Goal({ text: goalText });
 
   try {
     await goal.save();
     res
       .status(201)
       .json({ message: 'Goal saved', goal: { id: goal.id, text: goalText } });
-    console.log('STORED NEW GOAL');
   } catch (err) {
-    console.error('ERROR SAVING GOAL');
-    console.error(err.message);
     res.status(500).json({ message: 'Failed to save goal.' });
   }
 });
 
 app.delete('/goals/:id', async (req, res) => {
-  console.log('TRYING TO DELETE GOAL');
   try {
     await Goal.deleteOne({ _id: req.params.id });
     res.status(200).json({ message: 'Deleted goal!' });
-    console.log('DELETED GOAL');
   } catch (err) {
-    console.error('ERROR DELETING GOAL');
-    console.error(err.message);
     res.status(500).json({ message: 'Failed to delete goal.' });
   }
 });
 
-// Use the MongoDB URL from the environment variable
-const mongoUrl = process.env.MONGO_URL; // Use the MONGO_URL from .env
+const mongoose = require('mongoose');
+const http = require('http');
+// const app = require('./app');
+require('dotenv').config();
+
+const port = process.env.PORT || 321;
+const mongoUrl = process.env.MONGO_URL;
 
 if (!mongoUrl) {
   console.error('MONGO_URL is not defined in .env');
-  process.exit(1); // Exit the application if MONGO_URL is not set
+  process.exit(1);
 }
 
-console.log('Using MongoDB connection string:', mongoUrl); // Log the connection string (for debugging)
-const port = process.env.PORT || 321;  // Fallback to 3000 if PORT is not set
 mongoose.connect(
-  mongoUrl, 
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  },
+  mongoUrl,
+  { useNewUrlParser: true, useUnifiedTopology: true },
   (err) => {
     if (err) {
-      console.error('FAILED TO CONNECT TO MONGODB');
-      console.error(err);
+      console.error('Failed to connect to MongoDB:', err);
     } else {
-      console.log('CONNECTED TO MONGODB');
-      app.listen(port, () => {
+      console.log('Connected to MongoDB');
+      const server = http.createServer(app); // Create HTTP server
+      server.listen(port, () => {
         console.log(`Server is running on port ${port}`);
       });
     }
   }
 );
+
+module.exports = app; // Export the app
