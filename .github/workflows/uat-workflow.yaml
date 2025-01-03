@@ -31,7 +31,7 @@ jobs:
           pwd
           npm install
 
-      - name: Run Unit Tests for backend app
+      - name: Run Unit Test for backend app
         run: |
           ls -ltra
           cd backend/
