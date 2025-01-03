@@ -34,7 +34,7 @@ jobs:
           ls -ltra
           cd backend/
           pwd
-          sudo npm test && sleep 30
+          sudo npm run test
           ls -ltra
 
       - name: upload artifact
