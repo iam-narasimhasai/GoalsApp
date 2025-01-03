@@ -27,14 +27,14 @@ jobs:
         run: |
           cd backend/
           pwd
-          npm install
+          sudo npm install
 
       - name: Run Unit Tests for backend app
         run: |
           ls -ltra
           cd backend/
           pwd
-          npm test || true
+          sudo npm test 
           ls -ltra
 
       - name: upload artifact
