@@ -105,11 +105,11 @@ mongoose.connect(
     if (err) {
       console.error('FAILED TO CONNECT TO MONGODB');
       console.error(err);
-    } else {
-      console.log('CONNECTED TO MONGODB');
-      app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-      });
-    }
+    } //else {
+    //   console.log('CONNECTED TO MONGODB');
+    //   app.listen(port, () => {
+    //     console.log(`Server is running on port ${port}`);
+    //   });
+    // }
   }
 );
