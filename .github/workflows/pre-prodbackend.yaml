@@ -7,7 +7,7 @@ on:
 
 env:
   MONGO_URL: ${{secrets.MONGO_URL}}
-  PORT: "321"
+  PORT: "4321"
 
 permissions:
   contents: write
@@ -41,9 +41,10 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          sudo PORT=321 npm start & sudo sleep 5
+          sudo PORT=4321 npm start & sudo sleep 5
 
-
+      - name: code coverage
+        run: npm run coverage
 
       - name: Test server
         run: curl http://localhost:321/goals   
