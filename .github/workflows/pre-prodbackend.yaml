@@ -1,8 +1,11 @@
 name: backend Testing  
 
 on:
-  push:
   workflow_dispatch:
+  push:
+    branches:
+      - pre-prod
+  
    
 
 env:
@@ -15,16 +18,22 @@ permissions:
 jobs:
   unit-testing:
     name: Unit Testing
-    runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        nodejs_version: [18,19,20]
+        os: [ubuntu-latest,windows-latest]
+        exclude:
+          - nodejs_version: 18
+            os: [windows-latest]
+    runs-on: ${{matrix.os}}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js Version 18
+      - name: Setup Node.js Version - ${{matrix.nodejs_version}}
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: ${{matrix.nodejs_version}}
 
       - name: Install Dependencies
         run: |
@@ -49,7 +58,7 @@ jobs:
         
       - name: Upload Artifact
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-results
           path: backend/test-results.xml
