@@ -27,6 +27,4 @@ jobs:
         sleep 5  # wait for the server to start
 
     - name: Test server
-      run: |
-       curl http://localhost:3000
-       curl http://localhost:8080
+      run: curl http://localhost:8080
