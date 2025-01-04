@@ -47,8 +47,8 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          node app.js & http GET http://localhost:3000/goals
-       
+          node app.js 
+          http GET http://localhost:3000/goals
           ls -ltra
         
       - name: Upload Artifact
