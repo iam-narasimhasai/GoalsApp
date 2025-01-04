@@ -1,4 +1,4 @@
-name: Test Unit Testing
+name: 321 Testing
 
 on:
   #push:
@@ -30,8 +30,19 @@ jobs:
           cd backend/
           pwd
           npm install
+
+      - name: install httpie
+        run: sudo apt install httpie
+
+      - name: running app
+        run: |
+          cd backend/
+          node app.js
+          http GET http://localhost:3000/goals
+
       - name: Run Unit Test for backend app
         run: |
+          curl http://localhost:3000/goals | jq
           ls -ltra
           cd backend/
           pwd
