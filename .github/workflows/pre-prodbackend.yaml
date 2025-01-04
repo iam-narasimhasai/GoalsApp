@@ -42,8 +42,8 @@ jobs:
           sudo PORT=8000 npm start & sudo sleep 5
 
 
-      - name: lsof install and check
-        run: sudo lsof -i :321
+      - name: netstat
+        run: netstat -an | grep :321
 
       - name: Test server
         run: curl http://localhost:8000/goals   
