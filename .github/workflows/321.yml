@@ -34,11 +34,11 @@ jobs:
       - name: install httpie
         run: sudo apt install httpie
 
-      - name: running app
-        run: |
-          cd backend/
-          node app.js
-          http GET http://localhost:3000/goals
+    #   - name: running app
+    #     run: |
+    #       cd backend/
+    #       node app.js
+    #       http GET http://localhost:3000/goals
 
       - name: Run Unit Test for backend app
         run: |
@@ -47,6 +47,7 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose
+          http GET http://localhost:3000/goals
           ls -ltra
         
       - name: Upload Artifact
