@@ -1,7 +1,7 @@
 name: Test Unit Testing
 
 on:
-  #push:
+  push:
   workflow_dispatch:
 
 env:

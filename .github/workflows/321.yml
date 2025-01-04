@@ -1,7 +1,7 @@
-name: 321 Testing
+name: 321 Testing  
 
 on:
-  push:
+ # push:
   workflow_dispatch:
 
 env:
