@@ -43,7 +43,7 @@ jobs:
 
 
       - name: netstat
-        run: netstat -an | grep :321
+        run: netstat -c | grep 321
 
       - name: Test server
         run: curl http://localhost:8000/goals   
