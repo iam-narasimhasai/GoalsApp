@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       max-parallel: 1
       matrix:
-        nodejs_version: [18,19]
+        nodejs_version: [18,19,20]
         os: [ubuntu-latest,macos-latest]
         
     runs-on: ${{matrix.os}}
