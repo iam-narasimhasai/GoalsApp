@@ -32,7 +32,10 @@ jobs:
           npm install
 
       - name: install httpie
-        run: sudo apt install httpie
+        run: |
+          sudo apt install httpie
+          npm install -g pm2
+
 
     #   - name: running app
     #     run: |
@@ -47,7 +50,8 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          node app.js 
+          pm2 start app.js
+          pm2 list
           http GET http://localhost:3000/goals
           ls -ltra
         
