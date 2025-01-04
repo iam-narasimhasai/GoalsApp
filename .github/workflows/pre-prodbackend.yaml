@@ -32,7 +32,9 @@ jobs:
           pwd
           npm install
           
-
+      - name: steppppp
+        run: sudo setcap 'cap_net_bind_service=+ep' backend/
+        
       - name: Run Unit Test for backend app
         run: |
           ls -ltra
