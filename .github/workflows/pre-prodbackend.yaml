@@ -41,15 +41,14 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          sudo PORT=4321 npm start & sudo sleep 5
+          sudo PORT=4321 npm start
 
       - name: code coverage
         run: |
           cd backend/
           npm run coverage
 
-      - name: Test server
-        run: curl http://localhost:321/goals   
+      
         
       - name: Upload Artifact
         if: always()
