@@ -20,11 +20,9 @@ jobs:
     name: Unit Testing
     strategy:
       matrix:
-        nodejs_version: [18,19,20]
+        nodejs_version: [18,19]
         os: [ubuntu-latest,macos-latest]
-        exclude:
-          - nodejs_version: 18
-            os: [macos-latest]
+        
     runs-on: ${{matrix.os}}
     steps:
       - name: Checkout Repository
@@ -38,7 +36,6 @@ jobs:
       - name: Install Dependencies
         run: |
           cd backend/
-          pwd
           npm install
           
       
@@ -49,9 +46,7 @@ jobs:
       
       - name: Run Unit Test for backend app
         run: |
-            ls -ltra
             cd backend/
-            pwd
             npm run test -- --verbose 
             sudo PORT=$PORT npm start & sleep 5
       
