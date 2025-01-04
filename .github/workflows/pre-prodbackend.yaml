@@ -44,7 +44,7 @@ jobs:
 
       - name: lsof install and check
         run: |
-         sudo yum install -y lsof
+         sudo apt install -y lsof
          sudo lsof -i :321
 
       - name: Test server
