@@ -44,7 +44,9 @@ jobs:
           sudo PORT=4321 npm start & sudo sleep 5
 
       - name: code coverage
-        run: npm run coverage
+        run: |
+          cd backend/
+          npm run coverage
 
       - name: Test server
         run: curl http://localhost:321/goals   
