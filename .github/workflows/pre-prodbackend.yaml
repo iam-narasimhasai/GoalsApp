@@ -37,7 +37,7 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          sudo PORT=${{vars.PORT}} npm start & sleep 5 
+          sudo PORT=${{vars.PORT}} npm start 
 
       - name: Test server
         run: curl http://localhost:$PORT/goals   
