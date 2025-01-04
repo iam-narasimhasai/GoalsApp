@@ -52,6 +52,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: test-results
-          path: |
-            backend/test-results.xml
+          path: backend/test-results.xml
           
