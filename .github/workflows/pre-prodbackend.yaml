@@ -33,7 +33,7 @@ jobs:
           npm install
           
       - name: steppppp
-        run: sudo setcap 'cap_net_bind_service=+ep' backend/
+        run: sudo setcap 'cap_net_bind_service=+ep' backend/app.js
         
       - name: Run Unit Test for backend app
         run: |
