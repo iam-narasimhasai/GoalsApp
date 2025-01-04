@@ -43,9 +43,7 @@ jobs:
 
 
       - name: lsof install and check
-        run: |
-         sudo apt install -y lsof
-         sudo lsof -i :321
+        run: sudo lsof -i :321
 
       - name: Test server
         run: curl http://localhost:8000/goals   
