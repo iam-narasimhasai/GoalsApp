@@ -1,12 +1,12 @@
 name: 321 Testing  
 
 on:
- # push:
+  push:
   workflow_dispatch:
 
 env:
   MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"
-  PORT: "3000"
+  PORT: "8080"
 
 permissions:
   contents: write
@@ -45,14 +45,14 @@ jobs:
 
       - name: Run Unit Test for backend app
         run: |
-          curl http://localhost:3000/goals | jq
           ls -ltra
           cd backend/
           pwd
           npm run test -- --verbose 
           pm2 start app.js
           pm2 list
-          curl http://localhost:3000/goals | jq
+          PORT=8080 npm start
+          curl http://localhost:8080/goals | jq
           ls -ltra
         
       - name: Upload Artifact
