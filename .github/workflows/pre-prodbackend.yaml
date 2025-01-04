@@ -4,10 +4,10 @@ on:
   push:
   workflow_dispatch:
    
-    
+
 env:
   MONGO_URL: ${{secrets.MONGO_URL}}
-  # PORT: ${{vars.PORT}}
+  PORT: "568"
 
 permissions:
   contents: write
@@ -38,7 +38,7 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          sudo PORT=8080 npm start & sudo sleep 5
+          sudo PORT=568 npm start & sudo sleep 5
 
       - name: Test server
         run: curl http://localhost:8080/goals   
