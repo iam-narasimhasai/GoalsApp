@@ -23,7 +23,7 @@ jobs:
     - name: Run the server on port 321
       run: |
         cd frontend
-        PORT=8080 npm start &
+        PORT=321 npm start &
         sleep 5  # wait for the server to start
 
     - name: Test server
