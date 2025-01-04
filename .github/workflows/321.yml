@@ -31,12 +31,6 @@ jobs:
           pwd
           npm install
 
-      - name: install httpie
-        run: |
-          sudo apt install httpie
-          npm install -g pm2
-
-
     #   - name: running app
     #     run: |
     #       cd backend/
@@ -49,8 +43,6 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          pm2 start app.js
-          pm2 list
           PORT=8080 npm start
           curl http://localhost:8080/goals | jq
           ls -ltra
