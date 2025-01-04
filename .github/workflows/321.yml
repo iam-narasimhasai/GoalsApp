@@ -52,7 +52,7 @@ jobs:
           npm run test -- --verbose 
           pm2 start app.js
           pm2 list
-          http GET http://localhost:3000/goals
+          curl http://localhost:3000/goals | jq
           ls -ltra
         
       - name: Upload Artifact
