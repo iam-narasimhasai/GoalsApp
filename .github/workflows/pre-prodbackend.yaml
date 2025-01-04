@@ -6,7 +6,7 @@ on:
 
 env:
   MONGO_URL: ${{secrets.MONGO_URL}}
-  PORT: ${{vars.PORT}}
+  # PORT: ${{vars.PORT}}
 
 permissions:
   contents: write
@@ -37,7 +37,7 @@ jobs:
           cd backend/
           pwd
           npm run test -- --verbose 
-          PORT=$PORT npm start & sleep 5 
+          PORT=${{vars.PORT}} npm start & sleep 5 
 
       - name: Test server
         run: curl http://localhost:$PORT/goals   
