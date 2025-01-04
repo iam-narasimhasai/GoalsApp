@@ -29,10 +29,17 @@ describe("Goals API Suite", () => {
   });
 
   // Before each test, ensure the database is clean
-  beforeEach((done) => {
-    mongoose.connection.collections.goals.drop(() => {
-      done();
-    });
+  // beforeEach((done) => {
+  //   mongoose.connection.collections.goals.drop(() => {
+  //     done();
+  //   });
+  // });
+  beforeEach(async () => {
+    try {
+      await Goal.deleteMany({}); // Clear all goals
+    } catch (err) {
+      console.error("Error clearing database:", err);
+    }
   });
 
   /**
