@@ -32,22 +32,19 @@ jobs:
           pwd
           npm install
           
-      - name: steppppp
-        run: sudo setcap 'cap_net_bind_service=+ep' backend/app.js
-        
-      - name: Run Unit Test for backend app
-        run: |
-          ls -ltra
-          cd backend/
-          pwd
-          npm run test -- --verbose 
-          sudo PORT=4321 npm start
-
+      
       - name: code coverage
         run: |
           cd backend/
           npm run coverage
-
+      
+      - name: Run Unit Test for backend app
+        run: |
+            ls -ltra
+            cd backend/
+            pwd
+            npm run test -- --verbose 
+            sudo PORT=4321 npm start & sleep 5
       
         
       - name: Upload Artifact
