@@ -1,12 +1,12 @@
-name: Test Unit Testing
+name: 321 Testing  
 
 on:
   push:
   workflow_dispatch:
 
 env:
-  MONGO_URL: "mongodb+srv://sai:secret32412@cluster0.awxhn.mongodb.net/course-goals?retryWrites=true&w=majority"
-  PORT: "3000"
+  MONGO_URL: ${{secrets.MONGO_URL}}
+  PORT: ${{vars.PORT}}
 
 permissions:
   contents: write
@@ -30,13 +30,17 @@ jobs:
           cd backend/
           pwd
           npm install
+
       - name: Run Unit Test for backend app
         run: |
           ls -ltra
           cd backend/
           pwd
-          npm run test -- --verbose
-          ls -ltra
+          npm run test -- --verbose 
+          PORT=$PORT npm start & sleep 5 
+
+      - name: Test server
+        run: curl http://localhost:$PORT/goals   
         
       - name: Upload Artifact
         if: always()
