@@ -133,16 +133,16 @@ jobs:
       run: |
        docker images
        docker run --name backendapp -d   \
-           -p $PORT:$PORT \
+           -p 3000:3000 \
            -e MONGO_URL=$MONGO_URL \
            ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
 
        export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' backendapp)
        echo $IP
 
-       echo Testing Image URL using curl http://localhost:4321/goals 
+       echo Testing Image URL using curl http://localhost:3000/goals 
 
-       curl $IP:4321/goals
+       curl $IP:3000/goals
 
        
 
