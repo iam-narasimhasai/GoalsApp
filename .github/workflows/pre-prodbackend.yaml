@@ -142,7 +142,10 @@ jobs:
        docker ps -a & sleep 30
        echo Testing Image URL using curl http://localhost:3000/goals 
 
-       curl $IP:3000/goals
+       curl http://$IP:3000/goals
+
+       curl http://localhost:3000/goals 
+
 
        
 
