@@ -101,6 +101,10 @@ jobs:
     # needs: [unit-testing,code-coverage]
     runs-on: ubuntu-latest
 
+  
+    defaults:
+      run:
+        working-directory: backend
 
     steps:
 
