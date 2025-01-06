@@ -145,10 +145,12 @@ jobs:
          docker ps -a
      
         
-         sleep 30
+         sleep 60
      
          
          docker logs backendapp
+
+         docker ps
      
          
          echo "Testing image URL using curl http://localhost:3000/goals"
