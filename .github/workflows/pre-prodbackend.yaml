@@ -131,12 +131,10 @@ jobs:
 
     - name: Docker Image Test
       run: |
-        docker images
-     
-        
-         docker run --name backendapp -d \
+         docker images
+         docker run --name backendapp -d   \
              -p 3000:3000 \
-             -e MONGO_URL=${{ secrets.MONGO_URL }} \
+             -e MONGO_URL=$MONGO_URL \
              ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
      
          
