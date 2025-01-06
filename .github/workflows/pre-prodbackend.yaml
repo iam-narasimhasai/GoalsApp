@@ -9,6 +9,8 @@ on:
 env:
   MONGO_URL: ${{secrets.MONGO_URL}}
   PORT: ${{vars.PORT}}
+  DOCKER_USERNAME: ${{vars.DOCKER_USERNAME}}
+  DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
 
 jobs:
   unit-testing:
@@ -95,3 +97,27 @@ jobs:
           name: Code-Coverage-Result
           path: backend/coverage
           retention-days: 5
+
+  docker:
+    name: containerization
+    needs: [unit-testing,code-coverage]
+    runs-on: ubuntu-latest
+  
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+
+    - name: Checkout Repo
+      uses: actions/checkout@v4
+
+    - name: Dockerhub Login
+      uses: docker/login-action@v3.3.0
+      with:
+        username: $DOCKER_USERNAME
+        password: $DOCKER_PASSWORD
+
+    
+
+    
