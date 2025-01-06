@@ -71,7 +71,7 @@ const http = require('http');
 // const app = require('./app');
 require('dotenv').config();
 
-const port = process.env.PORT || 321;
+const port = process.env.PORT || 3000;
 const mongoUrl = process.env.MONGO_URL;
 
 if (!mongoUrl) {
