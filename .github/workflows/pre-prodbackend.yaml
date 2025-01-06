@@ -5,15 +5,10 @@ on:
   push:
     branches:
       - pre-prod
-  
-   
 
 env:
   MONGO_URL: ${{secrets.MONGO_URL}}
   PORT: ${{vars.PORT}}
-
-permissions:
-  contents: write
 
 jobs:
   unit-testing:
@@ -26,6 +21,10 @@ jobs:
         os: [ubuntu-latest]
         
     runs-on: ${{matrix.os}}
+
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -42,16 +41,11 @@ jobs:
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json')}}
 
       - name: Install Dependencies
-        run: |
-          cd backend/
-          npm install
+        run: npm install
       
       - name: Run Unit Test for backend app
         continue-on-error: true
-        run: |
-            cd backend/
-            npm run test -- --verbose 
-            sudo PORT=$PORT npm start & sleep 5
+        run: npm run test -- --verbose 
       
         
       - name: Upload Artifact
@@ -59,11 +53,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results on ${{matrix.os}} with node version ${{matrix.nodejs_version}}
-          path: backend/test-results.xml
+          path: test-results.xml
   
   code-coverage:
     name: Code Coverage
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest\
+    
+    defaults:
+      run:
+        working-directory: backend
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -79,18 +77,14 @@ jobs:
           path: backend/node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('package-lock.json')}}
    
-          
+
       - name: Install Dependencies
-        run: |
-         cd backend/
-         npm install
+        run: npm install
 
       - name: Check Code Coverage
         continue-on-error: true
         id: nodecoverage
-        run: |
-         cd backend/
-         npm run coverage
+        run: npm run coverage
 
       - name: Archive Test Results
         if: always()
