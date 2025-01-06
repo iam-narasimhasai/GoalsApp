@@ -140,9 +140,9 @@ jobs:
        export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' backendapp)
        echo $IP
 
-       echo Testing Image URL using curl
+       echo Testing Image URL using curl http://localhost:4321/goals 
 
-       curl http://localhost:$PORT/goals 
+       curl http://localhost:4321/goals 
 
        
 
