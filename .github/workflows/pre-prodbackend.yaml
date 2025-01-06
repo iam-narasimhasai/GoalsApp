@@ -122,26 +122,36 @@ jobs:
        ls -ltra
        pwd
 
-    - name: Docker Build
-      uses: docker/build-push-action@v6.10.0
-      with:
-        context: ./backend
-        push: false
-        tags: ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
-
     - name: Docker Image Test
       run: |
-       docker images
-       docker run --name backendapp -d -p 3000:3000 -e MONGO_URL=${{secrets.MONGO_URL}} ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
-
-       export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' backendapp)
-       echo $IP
-       docker ps & sleep 30
-       echo Testing Image URL using curl http://localhost:3000/goals 
-
-       curl localhost:3000/goals
-
-
+        docker images
+     
+        
+         docker run --name backendapp -d \
+             -p 3000:3000 \
+             -e MONGO_URL=${{ secrets.MONGO_URL }} \
+             ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
+     
+         
+         export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' backendapp)
+         echo "Container IP: $IP"
+     
+         
+         docker ps -a
+     
+        
+         sleep 30
+     
+         
+         docker logs backendapp
+     
+         
+         echo "Testing image URL using curl http://localhost:3000/goals"
+         curl -v http://localhost:3000/goals  # Using localhost since the port is mapped
+     
+        
+         curl -v http://$IP:3000/goals
+     
 
        
 
