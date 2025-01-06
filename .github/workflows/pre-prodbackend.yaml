@@ -122,6 +122,13 @@ jobs:
        ls -ltra
        pwd
 
+    - name: Docker Build
+      uses: docker/build-push-action@v6.10.0
+      with:
+        context: ./backend
+        push: false
+        tags: ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
+
     - name: Docker Image Test
       run: |
         docker images
