@@ -10,7 +10,7 @@ env:
   MONGO_URL: ${{secrets.MONGO_URL}}
   PORT: ${{vars.PORT}}
   DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
-  DOCKERHUB_PASSWORD: ${{ vars. DOCKERHUB_PASSWORD }}
+  DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
 
 jobs:
   unit-testing:
