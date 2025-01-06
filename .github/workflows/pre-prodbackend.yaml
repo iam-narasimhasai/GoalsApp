@@ -142,7 +142,7 @@ jobs:
 
        echo Testing Image URL using curl http://localhost:4321/goals 
 
-       curl http://localhost:4321/goals 
+       wget -q -O - http://127.0.0.1:4321/goals
 
        
 
