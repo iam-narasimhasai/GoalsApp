@@ -74,11 +74,13 @@ jobs:
 
       - name: Check Code Coverage
         continue-on-error: true
+        id: nodecoverage
         run: |
          cd backend/
          npm run coverage
 
       - name: Archive Test Results
+        if: steps.nodecoverage.outcome == 'failure' && steps.nodecoverage.outcome == 'success'
         uses: actions/upload-artifact@v4
         with:
           name: Code-Coverage-Result
