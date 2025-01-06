@@ -116,6 +116,30 @@ jobs:
         username: ${{ vars.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+    - name: Docker Build
+      uses: docker/build-push-action@v6.10.0
+      with:
+        context: Dockerfile.prod
+        push: false
+        tags: ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
+
+    - name: Docker Image Test
+      run: |
+       docker images
+       docker run --name backendapp -d   \
+           -p $PORT:$PORT \
+           -e MONGO_URL=$MONGO_URL \
+           ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
+
+       export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' backendapp)
+       echo $IP
+
+       echo Testing Image URL using curl
+
+       curl 127.0.0.1:$PORT/goals
+
+       
+
     
 
     
