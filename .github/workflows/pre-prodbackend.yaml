@@ -126,42 +126,7 @@ jobs:
       uses: docker/build-push-action@v6.10.0
       with:
         context: ./backend
-        push: false
+        push: true
         tags: ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
 
-    - name: Docker Image Test
-      run: |
-         docker images
-         docker run --name backendapp -d   \
-             -p 3000:3000 \
-             -e MONGO_URL=$MONGO_URL \
-             ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
-     
-         
-         export IP=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' backendapp)
-         echo "Container IP: $IP"
-     
-         
-         docker ps -a
-     
-        
-         sleep 60
-     
-         
-         docker logs backendapp
-
-         docker ps
-     
-         
-         echo "Testing image URL using curl http://localhost:3000/goals"
-         curl -v http://localhost:3000/goals  # Using localhost since the port is mapped
-     
-        
-         curl -v http://$IP:3000/goals
-     
-
-       
-
-    
-
-    
+   
