@@ -144,7 +144,7 @@ jobs:
 
        curl http://$IP:3000/goals
 
-       curl http://localhost:3000/goals 
+       curl http://backendapp:3000/goals 
 
 
        
