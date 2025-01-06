@@ -45,7 +45,10 @@ jobs:
       
       - name: Run Unit Test for backend app
         continue-on-error: true
-        run: npm run test -- --verbose 
+        run: |
+         npm run test -- --verbose 
+         pwd
+
       
         
       - name: Upload Artifact
@@ -58,10 +61,11 @@ jobs:
   code-coverage:
     name: Code Coverage
     runs-on: ubuntu-latest\
-    
+
     defaults:
       run:
         working-directory: backend
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
