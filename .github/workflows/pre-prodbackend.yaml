@@ -142,7 +142,9 @@ jobs:
 
        echo Testing Image URL using curl
 
-       curl 127.0.0.1:$PORT/goals
+       curl http://127.0.0.1:$PORT/goals
+
+       curl http://localhost:8080/goals 
 
        
 
