@@ -43,13 +43,11 @@ jobs:
       - name: Install Dependencies
         run: npm install
       
+
       - name: Run Unit Test for backend app
         continue-on-error: true
-        run: |
-         npm run test -- --verbose 
-         pwd
+        run: npm run test
 
-      
         
       - name: Upload Artifact
         if: always()
