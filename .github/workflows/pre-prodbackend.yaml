@@ -125,7 +125,7 @@ jobs:
     - name: Docker Build
       uses: docker/build-push-action@v6.10.0
       with:
-        context: .
+        context: ./backend
         push: false
         tags: ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
 
