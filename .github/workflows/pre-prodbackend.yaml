@@ -19,7 +19,7 @@ jobs:
         ports:
           - 27017:27017
     env:   
-      MONGO_URL: 'mongodb//localhost:27107/course-goals'
+      MONGO_URL: 'mongodb://localhost:27107/course-goals'
       MONGO_USERNAME: nonprod-user
       MONGO_PASSWORD: nonprod-password
     strategy:
