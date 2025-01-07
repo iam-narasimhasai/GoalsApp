@@ -15,7 +15,7 @@ jobs:
     name: Unit Testing
     services:
       monogo-db:
-        image: monogo:latest
+        image: mongo:latest
         ports:
           - 27017:27017
     env:   
