@@ -6,9 +6,9 @@ on:
     branches:
       - pre-prod
 
-env:   
-  MONGO_URL: ${{secrets.MONGO_URL}}
-  PORT: ${{vars.PORT}}
+# env:   
+#   MONGO_URL: ${{secrets.MONGO_URL}}
+#   PORT: ${{vars.PORT}}
 
 jobs:
   unit-testing:
@@ -55,6 +55,10 @@ jobs:
 
       - name: Run Unit Test for backend app
         continue-on-error: true
+        env:   
+          MONGO_URL: 'mongodb://localhost:27107/course-goals'
+          MONGO_USERNAME: nonprod-user
+          MONGO_PASSWORD: nonprod-password
         run: npm run test
 
         
