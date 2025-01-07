@@ -132,8 +132,9 @@ jobs:
       with:
         registry-type: public
       env:
-        AWS_REGION: ${{ secrets.AWS_REGION }}
-
+        AWS_REGION: ${{secrets.AWS_REGION}}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     - name: Docker Build & Push
       uses: docker/build-push-action@v6.10.0
       with:
