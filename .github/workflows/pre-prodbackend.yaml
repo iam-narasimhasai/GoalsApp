@@ -103,7 +103,7 @@ jobs:
 
     permissions: 
       packages: write
-      
+
     defaults:
       run:
         working-directory: backend
@@ -126,6 +126,11 @@ jobs:
         username: ${{github.repository_owner}}
         password: ${{secrets.GITHUB_TOKEN}}
 
+    - name: AWS ECR Login
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v2.0.1
+
+
     - name: Docker Build & Push
       uses: docker/build-push-action@v6.10.0
       with:
@@ -134,5 +139,8 @@ jobs:
         tags: |
          ${{vars.DOCKERHUB_USERNAME}}/testbackend:${{ github.sha }}
          ghcr.io/${{github.repository_owner}}/testbackend:${{github.sha}}
+         ${{steps.login-ecr.outputs.registry}}/testbackend:${{github.sha}}
+
+    
 
    
