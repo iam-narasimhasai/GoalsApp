@@ -101,7 +101,9 @@ jobs:
     # needs: [unit-testing,code-coverage]
     runs-on: ubuntu-latest
 
-  
+    permissions: 
+      packages: write
+      
     defaults:
       run:
         working-directory: backend
