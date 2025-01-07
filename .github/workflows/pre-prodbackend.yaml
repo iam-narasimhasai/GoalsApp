@@ -158,7 +158,21 @@ jobs:
          ghcr.io/${{github.repository_owner}}/testbackend:${{github.sha}}
          ${{steps.login-ecr.outputs.registry}}/testbackend:${{github.sha}}
         
+  dev-deploy:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
+      - name: Install kubectl CLI
+        uses: azure/setup-kubectl@v3
+
+      - name: Fetch Kubernets Cluster Details
+        run: |
+         kubectl version --short
+         echo ---------------------------------------------
+         kubectl get nodes
     
 
    
