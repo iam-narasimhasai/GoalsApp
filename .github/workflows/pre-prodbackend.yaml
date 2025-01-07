@@ -13,14 +13,6 @@ on:
 jobs:
   unit-testing:
     name: Unit Testing
-    services:
-      monogo-db:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-    env:   
-      MONGO_URL: 'mongodb://localhost:27107/course-goals'
-
     strategy:
       fail-fast: false
       max-parallel: 1
@@ -54,9 +46,6 @@ jobs:
 
       - name: Run Unit Test for backend app
         continue-on-error: true
-        env:   
-          MONGO_URL: 'mongodb://localhost:27107/course-goals'
-
         run: npm run test
 
         
@@ -145,7 +134,7 @@ jobs:
       with:
        registry-type: private
        #registry-type: public
-       #public.ecr.aws/testbackend:${{ github.sha }}
+       #public.ecr.aws/testbackend:latest
       env:
         AWS_REGION: ${{secrets.AWS_REGION}}
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
