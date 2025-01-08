@@ -168,9 +168,18 @@ jobs:
       - name: Install kubectl CLI
         uses: azure/setup-kubectl@v3
 
+      - name: Kubernetes Set Context
+        uses: Azure/k8s-set-context@v4.0.1
+        with:
+          method: kubeconfig
+          kubeconfig: ${{secrets.KUBECONFIG}}
+       
+    
+
       - name: Fetch Kubernets Cluster Details
         run: |
          kubectl version
+         kubectl get nodes
     
 
    
