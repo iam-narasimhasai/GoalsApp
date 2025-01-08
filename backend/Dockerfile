@@ -1,17 +1,17 @@
-FROM node:14
+FROM node:23-alpine3.20
 
 WORKDIR /app
 
 COPY package*.json .
 
-RUN npm install
+RUN npm ci --only=production
 
 COPY . .
 
-ENV MONGO_URL mongodb://localhost:27017/course-goals
+EXPOSE 321
 
-ENV PORT 321
+ENV MONGO_URL=mongodb://localhost:27017/course-goals
 
-EXPOSE ${PORT}
+ENV PORT=321
 
 CMD ["node","app.js"]
