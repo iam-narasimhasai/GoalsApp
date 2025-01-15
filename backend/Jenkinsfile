@@ -32,7 +32,7 @@ pipeline {
                 nvdCredentialsId: 'NVD-API-KEY', 
                 odcInstallation: 'OWASP-DepCheck-12'
 
-dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml', stopBuild: true
+dependencyCheckPublisher failedTotalCritical: 1, pattern: 'backend/owasp-report/dependency-check-report.xml', stopBuild: true
 
                 
             }
