@@ -28,7 +28,7 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-        dependencyCheck additionalArguments: '--scan backend/ --out ./owasp-report --prettyPrint --format ALL', 
+        dependencyCheck additionalArguments: '--scan backend/ --out ./owasp-report --prettyPrint --format JENKINS', 
                         nvdCredentialsId: 'NVD-API-KEY', 
                         odcInstallation: 'OWASP-DepCheck-12'
                 
