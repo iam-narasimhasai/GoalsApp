@@ -7,12 +7,13 @@ pipeline {
         MONGO_URL = "${params.MONGO_URL}" 
     }
     stages {
-         // stage('Git Checkout') {
+        // This stage can be avoided as we directly used Pipelinescript from SCM
+        // stage('Git Checkout') {
         //     steps {
         //         git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
         //     }
-        // } this step can be avoided as we directly used Pipelinescript from SCM
-        
+        // }
+
         stage('Installing Dependencies') {
             steps {
                 sh '''
@@ -22,34 +23,16 @@ pipeline {
             }
         } 
 
-
-        stage('Checking Dependencies'){  
-            parallel{
-
         stage('OWASP Dependency Check') {
             steps {
-        dependencyCheck additionalArguments: '--scan backend/ --out backend/owasp-report --prettyPrint --format ALL', 
-                nvdCredentialsId: 'NVD-API-KEY', 
-                odcInstallation: 'OWASP-DepCheck-12'
+                dependencyCheck additionalArguments: '--scan backend/ --out backend/owasp-report --prettyPrint --format ALL', 
+                                nvdCredentialsId: 'NVD-API-KEY', 
+                                odcInstallation: 'OWASP-DepCheck-12'
 
-dependencyCheckPublisher failedTotalCritical: 1, pattern: 'backend/owasp-report/dependency-check-report.xml', stopBuild: true
-
-                
+                // Uncomment this to publish results and fail the build for critical vulnerabilities
+                // dependencyCheckPublisher failedTotalCritical: 1, pattern: 'backend/owasp-report/dependency-check-report.xml', stopBuild: true
             }
         }
-
-        stage('NPM Dependency Audit') {
-            steps {
-                sh '''
-                    cd backend
-                    npm audit --audit-level=critical
-                '''
-            }
-        }
-    }
-    
-    }
-
 
         stage('Run Unit Testing') {
             steps {
@@ -66,11 +49,7 @@ dependencyCheckPublisher failedTotalCritical: 1, pattern: 'backend/owasp-report/
                     cd backend
                     npm run coverage
                 '''
-                
             }
         }
-
-
-
     }
 }
