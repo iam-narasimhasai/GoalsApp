@@ -2,13 +2,12 @@ pipeline {
     agent any
     tools {
         nodejs 'nodejs-23-6' 
-        
     }
     environment {
         MONGO_URL = "${params.MONGO_URL}" 
     }
     stages {
-        // stage('Git Checkout') {
+         // stage('Git Checkout') {
         //     steps {
         //         git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
         //     }
@@ -16,74 +15,47 @@ pipeline {
         
         stage('Installing Dependencies') {
             steps {
-                script {
-                    sh '''
-                        cd backend
-                        npm install --no-audit
-                    '''
-                }
-            }
-        }
-
-
-        stage('OWASP Dependency Check'){
-            steps{
                 sh '''
                     cd backend
+                    npm install --no-audit
                 '''
-                dependencyCheck additionalArguments: '''--scan --out --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
             }
         }
-        stage('NPM Dependency Audit'){
-            steps{
+
+        stage('OWASP Dependency Check') {
+            steps {
+                
+                dependencyCheck additionalArguments: '--scan backend/ --out ./owasp-report --prettyPrint', odcInstallation: 'OWASP-DepCheck-12'
+                
+            }
+        }
+
+        stage('NPM Dependency Audit') {
+            steps {
                 sh '''
                     cd backend
                     npm audit --audit-level=critical
-                    echo $?
                 '''
             }
         }
 
-
-
         stage('Run Unit Testing') {
             steps {
-                script {
-                    sh '''
-                        cd backend
-                        npm run test
-                    '''
-                }
+                sh '''
+                    cd backend
+                    npm run test
+                '''
             }
         }
-        
+
         stage('Code Coverage') {
             steps {
-                script {
-                    sh '''
-                        cd backend
-                        npm run coverage
-                    '''
-                }
+                sh '''
+                    cd backend
+                    npm run coverage
+                '''
+                
             }
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }
