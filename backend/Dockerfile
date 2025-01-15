@@ -12,6 +12,6 @@ EXPOSE 321
 
 ENV MONGO_URL=mongodb://localhost:27017/course-goals
 
-ENV PORT=3211
+ENV PORT=321
 
 CMD ["node","app.js"]
