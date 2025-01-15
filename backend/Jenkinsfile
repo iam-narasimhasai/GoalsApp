@@ -22,13 +22,13 @@ pipeline {
             }
         } 
 
-        
+
         stage('Checking Dependencies'){  
             parallel{
 
         stage('OWASP Dependency Check') {
             steps {
-                    dependencyCheck additionalArguments: '--scan backend/ --out ./owasp-report --prettyPrint --format JSON,HTML', 
+        dependencyCheck additionalArguments: '--scan backend/ --out ./owasp-report --prettyPrint --format ALL', 
                         nvdCredentialsId: 'NVD-API-KEY', 
                         odcInstallation: 'OWASP-DepCheck-12'
                 
