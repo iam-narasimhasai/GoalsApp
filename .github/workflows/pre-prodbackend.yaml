@@ -182,7 +182,7 @@ jobs:
 
       - name: Create secrets for k8s env
         run: |
-          kubectl create secret generic backendsecrets --from-literal=PORT=${{vars.PORT}} --from-literal=MONGO_URL=${{secrets.MONGO_URL}}
+          kubectl create secret generic backendsecrets --from-literal=PORT=${{vars.PORT}} --from-literal=MONGO_URL=${{secrets.MONGO_URL}}  || echo "Secret already exists"
 
       - name: Deploy Manifest files
         run: |
