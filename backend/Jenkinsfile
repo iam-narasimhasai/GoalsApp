@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    tools {
+        nodejs 'NJS236' // Ensure 'NJS36' is configured in Jenkins under NodeJS tools
+    }
+    environment {
+        MONGO_URL = "${params.MONGO_URL}" // Assumes MONGO_URL is passed as a parameter
+    }
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
+            }
+        }
+        
+        stage('Install Dependencies') {
+            steps {
+                script {
+                    sh '''
+                        cd backend
+                        npm install
+                    '''
+                }
+            }
+        }
+        
+        stage('Run Unit Testing') {
+            steps {
+                script {
+                    sh '''
+                        cd backend
+                        npm run test
+                    '''
+                }
+            }
+        }
+        
+        stage('Code Coverage') {
+            steps {
+                script {
+                    sh '''
+                        cd backend
+                        npm run coverage
+                    '''
+                }
+            }
+        }
+    }
+}
