@@ -31,9 +31,11 @@ pipeline {
 
                 // Uncomment this to publish results and fail the build for critical vulnerabilities
                 // dependencyCheckPublisher failedTotalCritical: 1, pattern: 'backend/owasp-report/dependency-check-report.xml', stopBuild: true
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, keepAll: true, reportDir: 'backend/owasp-report', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
 
+        
         stage('Run Unit Testing') {
             steps {
                 sh '''
@@ -51,5 +53,8 @@ pipeline {
                 '''
             }
         }
+
+
+
     }
 }
