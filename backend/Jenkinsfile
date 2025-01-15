@@ -30,9 +30,8 @@ pipeline {
             steps{
                 sh '''
                     cd backend
-                    dependencyCheck additionalArguments: '''--scan --out --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
-                    echo $?
                 '''
+                dependencyCheck additionalArguments: '''--scan --out --prettyPrint''', odcInstallation: 'OWASP-DepCheck-12'
             }
         }
         stage('NPM Dependency Audit'){
