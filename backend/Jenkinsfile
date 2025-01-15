@@ -2,7 +2,7 @@ pipeline {
     agent any
     tools {
         nodejs 'nodejs-23-6' 
-        'OWASP-DepCheck-12'
+        
     }
     environment {
         MONGO_URL = "${params.MONGO_URL}" 
@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        
+
         stage('OWASP Dependency Check'){
             steps{
                 sh '''
