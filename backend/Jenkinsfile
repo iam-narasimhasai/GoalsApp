@@ -72,7 +72,7 @@ pipeline {
                     
                     $SONAR_SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=GoalsApp \
-                        -Dsonar.sources=app.js \
+                        -Dsonar.sources=. \
                         -Dsonar.host.url=http://54.91.137.27:9000 \
                         -Dsonar.login=sqp_5091a3693f265d001ec8872a5f2d6498e017f42b
                 '''
