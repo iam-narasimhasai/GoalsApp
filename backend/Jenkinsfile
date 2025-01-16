@@ -40,6 +40,10 @@ pipeline {
         
         stage('Run Unit Testing') {
             steps {
+                script {
+                    
+                    input message: 'Do you approve running unit tests?', ok: 'Yes'
+                }
                 sh '''
                     cd backend
                     npm run test
