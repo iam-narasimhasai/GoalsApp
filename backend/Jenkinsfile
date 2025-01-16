@@ -72,7 +72,7 @@ pipeline {
                     
                     $SONAR_SCANNER_HOME/bin/sonar-scanner \
                         -Dsonar.projectKey=GoalsApp \
-                        -Dsonar.sources=app.js,app-test.js \
+                        -Dsonar.sources=app.js \
                         -Dsonar.host.url=http://54.91.137.27:9000 \
                         -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
                         -Dsonar.login=sqp_b8ec8315bca6ea0fa5ed7b32ac396e76c057b809
