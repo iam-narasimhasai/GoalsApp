@@ -5,6 +5,7 @@ pipeline {
     }
     environment {
         MONGO_URL = "${params.MONGO_URL}" 
+        PORT = 5621
     }
     stages {
         // This stage can be avoided as we directly used Pipelinescript from SCM
