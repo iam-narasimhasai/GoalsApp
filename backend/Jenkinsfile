@@ -10,7 +10,7 @@ pipeline {
 
     options{
         disableResume()
-        disableConceurrentBuilds abortPrevious: true
+        disableConcurrentBuilds abortPrevious: true
     }
     stages {
         // This stage can be avoided as we directly used Pipelinescript from SCM
