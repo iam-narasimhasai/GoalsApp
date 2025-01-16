@@ -74,7 +74,7 @@ pipeline {
                         -Dsonar.projectKey=GoalsApp \
                         -Dsonar.sources=app.js,app-test.js \
                         -Dsonar.host.url=http://54.91.137.27:9000 \
-                        -Dsonar.login=sqp_5091a3693f265d001ec8872a5f2d6498e017f42b
+                        -Dsonar.login=sqp_b8ec8315bca6ea0fa5ed7b32ac396e76c057b809
                 '''
             }
         }
