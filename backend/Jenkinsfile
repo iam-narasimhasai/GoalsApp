@@ -1,11 +1,13 @@
 pipeline {
     agent any
     tools {
-        nodejs 'nodejs-23-6' 
+        nodejs 'nodejs-23-6'
+
     }
     environment {
         MONGO_URL = "${params.MONGO_URL}" 
         PORT = 5621
+        SONAR_SCANNER_HOME= tool 'sonarqube-scanner-621'
     }
 
     options {
@@ -62,6 +64,25 @@ pipeline {
                 }
             }
         }
+
+
+        stage('SAST - SonarQube') {
+            steps {
+                sh '''
+                cd backend/
+                echo $SONAR_SCANNER_HOME
+                
+                $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                    -Dsonar.projectKey=GoalsApp \
+                    -Dsonar.sources=app.js \
+                    -Dsonar.host.url=http://54.91.137.27:9000 \
+                    -Dsonar.login=sqp_5091a3693f265d001ec8872a5f2d6498e017f42b
+
+                '''
+                }
+            }
+        }
+
     }
 
     post {
