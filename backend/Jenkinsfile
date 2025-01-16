@@ -44,6 +44,7 @@ pipeline {
                     cd backend
                     npm run test
                 '''
+                junit allowEmptyResults: true, keepProperties: true, stdioRetention: '', testResults: 'backend/test-results.xml'
             }
         }
 
