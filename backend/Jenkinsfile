@@ -4,8 +4,13 @@ pipeline {
         nodejs 'nodejs-23-6' 
     }
     environment {
-        //MONGO_URL = "${params.MONGO_URL}" 
+        MONGO_URL = "${params.MONGO_URL}" 
         PORT = 5621
+    }
+
+    options{
+        disableResume()
+        disableConceurrentBuilds abortPrevious: true
     }
     stages {
         // This stage can be avoided as we directly used Pipelinescript from SCM
