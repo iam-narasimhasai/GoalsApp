@@ -4,7 +4,7 @@ pipeline {
         nodejs 'nodejs-23-6' 
     }
     environment {
-        // MONGO_URL = "${params.MONGO_URL}" 
+        MONGO_URL = "${params.MONGO_URL}" 
         PORT = 5621
     }
     stages {
@@ -40,12 +40,13 @@ pipeline {
 
         
         stage('Run Unit Testing') {
+            options { retry(3) }
             steps {
                 // script {
                     
                 //     input message: 'Do you approve running unit tests?', ok: 'Yes'
                 // }
-                 options { retry(3) }
+                 
                 sh '''
                     cd backend
                     npm run test
