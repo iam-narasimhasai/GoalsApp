@@ -89,7 +89,7 @@ pipeline {
                 sh '''
                 cd backend/
                 printenv
-                docker build -t narasimhasai9581/testingbackend:${GITCOMMIT} .
+                docker build -t narasimhasai9581/testingbackend:${GIT_COMMIT} .
                 '''
 
 
