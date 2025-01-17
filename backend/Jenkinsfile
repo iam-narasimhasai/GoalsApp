@@ -82,6 +82,22 @@ pipeline {
                 }
             }
         }
+
+        stage('Build Docker Image') {
+            steps{
+        
+                sh '''
+                cd backend/
+                printenv
+                docker build -t narasimhasai9581/testingbackend:$GITCOMMIT .
+                '''
+
+
+
+            }
+
+        }
+
     }
 
     post {
