@@ -68,31 +68,43 @@ app.delete('/goals/:id', async (req, res) => {
 
 const mongoose = require('mongoose');
 const http = require('http');
-// const app = require('./app');
-require('dotenv').config();
 
 const port = process.env.PORT || 3000;
-const mongoUrl = process.env.MONGO_URL;
+const mongoUri = process.env.MONGOURI;
+const mongoUser = process.env.MONGO_USER;
+const mongoPassword = process.env.MONGO_PASSWORD;
 
-if (!mongoUrl) {
-  console.error('MONGO_URL is not defined in .env');
+if (!mongoUri) {
+  console.error('MONGOURI is not defined in .env');
   process.exit(1);
 }
 
-mongoose.connect(
-  mongoUrl,
-  { useNewUrlParser: true, useUnifiedTopology: true },
-  (err) => {
-    if (err) {
-      console.error('Failed to connect to MongoDB:', err);
-    } else {
-      console.log('Connected to MongoDB');
-      const server = http.createServer(app); // Create HTTP server
-      server.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-      });
-    }
+// Build connection string
+let fullMongoUri = mongoUri;
+if (mongoUser && mongoPassword) {
+  const encodedUser = encodeURIComponent(mongoUser);
+  const encodedPassword = encodeURIComponent(mongoPassword);
+  const uriParts = mongoUri.split('://');
+  if (uriParts.length === 2) {
+    fullMongoUri = `${uriParts[0]}://${encodedUser}:${encodedPassword}@${uriParts[1]}`;
   }
-);
+}
 
-module.exports = app; // Export the app
+const startServer = async () => {
+  try {
+    await mongoose.connect(fullMongoUri);
+    console.log('Connected to MongoDB');
+
+    const server = http.createServer(app); // Create HTTP server
+    server.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (err) {
+    console.error('Failed to connect to MongoDB:', err);
+    process.exit(1);
+  }
+};
+
+startServer();
+
+module.exports = app;
