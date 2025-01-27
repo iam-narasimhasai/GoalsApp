@@ -4,23 +4,24 @@ pipeline {
         nodejs 'nodejs-23-6'
     }
     environment {
-        MONGO_URL = "${params.MONGO_URL}" 
-        PORT = 5621
+        MONGOURI = "mongodb+srv://cluster0.awxhn.mongodb.net/retryWrites=true&w=majority"
+        MONGO_USER = "sai"
+        MONGO_PASSWORD = "secret32412"
+        PORT = 2121
         SONAR_SCANNER_HOME = tool 'sonarqube-scanner-621'
     }
 
     options {
         disableResume()
-        disableConcurrentBuilds abortPrevious: true
+        disableConcurrentBuilds(abortPrevious: true)
     }
 
     stages {
-        // This stage can be avoided as we directly used Pipelinescript from SCM
-        // stage('Git Checkout') {
-        //     steps {
-        //         git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
-        //     }
-        // }
+        stage('Git Checkout') {
+            steps {
+                git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
+            }
+        }
 
         stage('Installing Dependencies') {
             options { timestamps() }
@@ -69,7 +70,7 @@ pipeline {
                 timeout(time: 60, unit: 'SECONDS') {
                     withSonarQubeEnv('sonar-qube-server') {
                         sh '''
-                            cd backend/
+                            cd backend
                             echo $SONAR_SCANNER_HOME
 
                             $SONAR_SCANNER_HOME/bin/sonar-scanner \
@@ -78,25 +79,20 @@ pipeline {
                                 -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
                         '''
                     }
-                    waitForQualityGate abortPipeline: true
+                    waitForQualityGate(abortPipeline: true)
                 }
             }
         }
 
         stage('Build Docker Image') {
-            steps{
-        
+            steps {
                 sh '''
-                cd backend/
-                printenv
-                docker build -t narasimhasai9581/testingbackend:${GIT_COMMIT} .
+                    cd backend/
+                    docker build -t narasimhasai9581/testingbackend:latest .
                 '''
-
-
-
             }
-
         }
+
 
     }
 
@@ -109,11 +105,10 @@ pipeline {
                 reportDir: 'backend/owasp-report', 
                 reportFiles: 'dependency-check-jenkins.html', 
                 reportName: 'Dependency HTML Report', 
-                reportTitles: '', 
                 useWrapperFileDirectly: true
             ])
 
-            junit allowEmptyResults: true, keepProperties: true, stdioRetention: '', testResults: 'backend/test-results.xml'
+            junit allowEmptyResults: true, testResults: 'backend/test-results.xml'
 
             publishHTML([
                 allowMissing: true, 
@@ -122,9 +117,10 @@ pipeline {
                 reportDir: 'backend/coverage/lcov-report', 
                 reportFiles: 'index.html', 
                 reportName: 'Code Coverage HTML Report', 
-                reportTitles: '', 
                 useWrapperFileDirectly: true
             ])
+
+           
         }
     }
 }
