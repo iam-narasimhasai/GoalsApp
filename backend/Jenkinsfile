@@ -32,6 +32,7 @@ pipeline {
          stage('Unit Testing') {
             steps {
                 sh '''
+                cd backend/
                 npm test
                 '''
             }
@@ -41,6 +42,7 @@ pipeline {
          stage('Code Coverage') {
             steps {
                 sh '''
+                cd backend/
                 npm run coverage
                 '''
             }
