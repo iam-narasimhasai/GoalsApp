@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-               git branch:'pre-prod' url: 'https://github.com/iam-narasimhasai/GoalsApp'
+               git branch:'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
             }
         }
 
