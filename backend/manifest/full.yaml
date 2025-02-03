@@ -1,0 +1,90 @@
+---
+
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: my-ebs-sc
+provisioner: ebs.csi.aws.com
+parameters:
+  type: gp3         
+  fsType: ext4      
+  encrypted: "true" 
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ebs-pvc
+spec:
+  storageClassName: my-ebs-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+
+
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backenddeploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels: 
+      app: backend
+  template:
+    metadata:
+      labels: 
+        app: backend
+    spec:
+      containers:
+        - name: cont1
+          image: narasimhasai95/goalsapi:cdc9947171c691936c8898f887ade031d2de5545
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - mountPath: "/app/logs"
+              name: ebs-volume
+          env:
+            - name: MONGOURI
+              valueFrom:
+                secretKeyRef: 
+                  name: backendsecrets
+                  key: MONGOURI
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef: 
+                  name: backendsecrets
+                  key: MONGO_USER
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef: 
+                  name: backendsecrets
+                  key: MONGO_PASSWORD 
+            - name: PORT
+              valueFrom:
+                secretKeyRef: 
+                  name: backendsecrets
+                  key: PORT
+      volumes:  
+        - name: ebs-volume
+          persistentVolumeClaim:
+            claimName: ebs-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backendservice
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend
+  ports:
+    - port: 80
+      targetPort: 3000
