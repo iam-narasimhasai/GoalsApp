@@ -88,7 +88,7 @@ pipeline {
             steps {
                 sh '''
                     cd backend/
-                    docker build -t narasimhasai95/Goalsbackend:${GIT_COMMIT} .
+                    docker build -t narasimhasai95/goalsbackend:${GIT_COMMIT} .
                 '''
             }
         }
@@ -97,7 +97,7 @@ pipeline {
             steps {
                 sh '''
                     mkdir -p trivy-report
-                    trivy image --severity CRITICAL,HIGH,MEDIUM --format template --template "@/var/lib/jenkins/html.tpl" -o trivy-report/vulnerability-report.html narasimhasai95/Goalsbackend:${GIT_COMMIT}
+                    trivy image --severity CRITICAL,HIGH,MEDIUM --format template --template "@/var/lib/jenkins/html.tpl" -o trivy-report/vulnerability-report.html narasimhasai95/goalsbackend:${GIT_COMMIT}
                 '''
             }
         }
