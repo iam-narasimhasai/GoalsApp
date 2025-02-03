@@ -5,3 +5,6 @@ Dockerfile.npr
 Jenkinsfile
 test-results.xml
 manifest/*
+manifest
+coverage
+owasp-report
