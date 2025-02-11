@@ -10,7 +10,6 @@ pipeline {
         PORT = 2121
         GIT_TOKEN = credentials('githubtoken')
         APP_URL = "http://aed3d6133e593405abb3e439e57eeb5a-1237728390.ap-south-1.elb.amazonaws.com/goals"
-
     }
 
     options {
@@ -35,8 +34,6 @@ pipeline {
             }
         }
 
-
-
         stage('Run Unit Testing') {
             options { retry(3) }
             steps {
@@ -58,13 +55,10 @@ pipeline {
             }
         }
 
-
-
         stage('Build Docker Image') {
             steps {
                 sh '''
                     cd backend/
-                    
                     docker build -t narasimhasai95/goalsapi:${GIT_COMMIT} .
                 '''
             }
@@ -89,53 +83,52 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                
-                   sh 'git clone -b main https://github.com/iam-narasimhasai/GoalsApp_Manifest'
-                   dir("GoalsApp_Manifest") {
+                sh 'git clone -b main https://github.com/iam-narasimhasai/GoalsApp_Manifest'
+                dir("GoalsApp_Manifest") {
                     sh '''
-                    git checkout main
-                    sed -i "s#narasimhasai95.*#narasimhasai95/goalsapi:${GIT_COMMIT}#g" deploy-backend.yaml
+                        git checkout main
+                        sed -i "s#narasimhasai95.*#narasimhasai95/goalsapi:${GIT_COMMIT}#g" deploy-backend.yaml
 
-                    cat deploy-backend.yaml
-                    
-                    git config --global user.email "narasimhasai.nimmagadda@gmail.com"
-                    git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
-                    git add .
-                    git commit -am "Updated the docker image"
-                    git push -u origin main
-
+                        cat deploy-backend.yaml
+                        
+                        git config --global user.email "narasimhasai.nimmagadda@gmail.com"
+                        git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
+                        git add .
+                        git commit -am "Updated the docker image"
+                        git push -u origin main
                     '''
-                   }
-                
+                }
             }
         }
 
-stage('DAST - OWASP ZAP') {
-    steps {
-        sh '''
-            chmod 777 $(pwd)
-            docker run --rm -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-            -t $APP_URL \
-            -r zap_report.html \
-            -w zap_report.md \
-            -J zap_json_report.json \
-            -x zap_xml_report.xml
-        '''
-    }
-}
+        stage('App Deployed?') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    input message: 'Is ArgoCD Synced?', ok: 'Yes'
+                }
+            }
+        }
 
-
-
-
-
-
+        stage('DAST - OWASP ZAP') {
+            steps {
+                sh '''
+                    chmod 777 $(pwd)
+                    docker run --rm -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                    -t $APP_URL \
+                    -r zap_report.html \
+                    -w zap_report.md \
+                    -J zap_json_report.json \
+                    -x zap_xml_report.xml \
+                    -c zap_ignore_rules
+                '''
+            }
+        }
     }
 
     post {
         always {
-            
             script {
-                if(fileExists('GoalsApp_Manifest')){
+                if (fileExists('GoalsApp_Manifest')) {
                     sh 'rm -rf GoalsApp_Manifest'
                 }
             }
@@ -143,31 +136,31 @@ stage('DAST - OWASP ZAP') {
             junit allowEmptyResults: true, testResults: 'backend/test-results.xml'
 
             publishHTML([
-                allowMissing: true, 
-                alwaysLinkToLastBuild: true, 
-                keepAll: true, 
-                reportDir: 'backend/coverage/lcov-report', 
-                reportFiles: 'index.html', 
-                reportName: 'Code Coverage HTML Report', 
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'backend/coverage/lcov-report',
+                reportFiles: 'index.html',
+                reportName: 'Code Coverage HTML Report',
                 useWrapperFileDirectly: true
             ])
             publishHTML([
-                allowMissing: true, 
-                alwaysLinkToLastBuild: true, 
-                keepAll: true, 
-                reportDir: '.', 
-                reportFiles: 'zap_report.html', 
-                reportName: 'OWASP ZAP DAST Report', 
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: '.',
+                reportFiles: 'zap_report.html',
+                reportName: 'OWASP ZAP DAST Report',
                 useWrapperFileDirectly: true
             ])   
 
             publishHTML([
-                allowMissing: true, 
-                alwaysLinkToLastBuild: true, 
-                keepAll: true, 
-                reportDir: 'trivy-report', 
-                reportFiles: 'vulnerability-report.html', 
-                reportName: 'Trivy Vulnerability Report', 
+                allowMissing: true,
+                alwaysLinkToLastBuild: true,
+                keepAll: true,
+                reportDir: 'trivy-report',
+                reportFiles: 'vulnerability-report.html',
+                reportName: 'Trivy Vulnerability Report',
                 useWrapperFileDirectly: true
             ])
         }
