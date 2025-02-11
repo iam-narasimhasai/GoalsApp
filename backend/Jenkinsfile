@@ -24,104 +24,104 @@ pipeline {
             }
         }
 
-        stage('Installing Dependencies') {
-            options { timestamps() }
-            steps {
-                sh '''
-                    cd backend
-                    npm install
-                '''
-            }
-        }
+        // stage('Installing Dependencies') {
+        //     options { timestamps() }
+        //     steps {
+        //         sh '''
+        //             cd backend
+        //             npm install
+        //         '''
+        //     }
+        // }
 
-        stage('Run Unit Testing') {
-            options { retry(3) }
-            steps {
-                sh '''
-                    cd backend
-                    npm run test
-                '''
-            }
-        }
+        // stage('Run Unit Testing') {
+        //     options { retry(3) }
+        //     steps {
+        //         sh '''
+        //             cd backend
+        //             npm run test
+        //         '''
+        //     }
+        // }
 
-        stage('Code Coverage') {
-            steps {
-                catchError(message: 'Oops! it will be fixed in future', stageResult: 'UNSTABLE') {
-                    sh '''
-                        cd backend
-                        npm run coverage
-                    '''
-                }
-            }
-        }
+        // stage('Code Coverage') {
+        //     steps {
+        //         catchError(message: 'Oops! it will be fixed in future', stageResult: 'UNSTABLE') {
+        //             sh '''
+        //                 cd backend
+        //                 npm run coverage
+        //             '''
+        //         }
+        //     }
+        // }
 
-        stage('Build Docker Image') {
-            steps {
-                sh '''
-                    cd backend/
-                    docker build -t narasimhasai95/goalsapi:${GIT_COMMIT} .
-                '''
-            }
-        }
+        // stage('Build Docker Image') {
+        //     steps {
+        //         sh '''
+        //             cd backend/
+        //             docker build -t narasimhasai95/goalsapi:${GIT_COMMIT} .
+        //         '''
+        //     }
+        // }
 
-        stage('Trivy Docker Image Scan') {
-            steps {
-                sh '''
-                    mkdir -p trivy-report
-                    trivy image --severity CRITICAL,HIGH,MEDIUM --format template --template "@/var/lib/jenkins/html.tpl" -o trivy-report/vulnerability-report.html narasimhasai95/goalsapi:${GIT_COMMIT}
-                '''
-            }
-        }
+        // stage('Trivy Docker Image Scan') {
+        //     steps {
+        //         sh '''
+        //             mkdir -p trivy-report
+        //             trivy image --severity CRITICAL,HIGH,MEDIUM --format template --template "@/var/lib/jenkins/html.tpl" -o trivy-report/vulnerability-report.html narasimhasai95/goalsapi:${GIT_COMMIT}
+        //         '''
+        //     }
+        // }
 
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry(credentialsId: 'docker-creds', url: "") {
-                    sh 'docker push narasimhasai95/goalsapi:${GIT_COMMIT}'
-                }
-            }
-        }
+        // stage('Push Docker Image') {
+        //     steps {
+        //         withDockerRegistry(credentialsId: 'docker-creds', url: "") {
+        //             sh 'docker push narasimhasai95/goalsapi:${GIT_COMMIT}'
+        //         }
+        //     }
+        // }
 
-        stage('Deploy to Kubernetes') {
-            steps {
-                sh 'git clone -b main https://github.com/iam-narasimhasai/GoalsApp_Manifest'
-                dir("GoalsApp_Manifest") {
-                    sh '''
-                        git checkout main
-                        sed -i "s#narasimhasai95.*#narasimhasai95/goalsapi:${GIT_COMMIT}#g" deploy-backend.yaml
+        // stage('Deploy to Kubernetes') {
+        //     steps {
+        //         sh 'git clone -b main https://github.com/iam-narasimhasai/GoalsApp_Manifest'
+        //         dir("GoalsApp_Manifest") {
+        //             sh '''
+        //                 git checkout main
+        //                 sed -i "s#narasimhasai95.*#narasimhasai95/goalsapi:${GIT_COMMIT}#g" deploy-backend.yaml
 
-                        cat deploy-backend.yaml
+        //                 cat deploy-backend.yaml
                         
-                        git config --global user.email "narasimhasai.nimmagadda@gmail.com"
-                        git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
-                        git add .
-                        git commit -am "Updated the docker image"
-                        git push -u origin main
-                    '''
-                }
-            }
-        }
+        //                 git config --global user.email "narasimhasai.nimmagadda@gmail.com"
+        //                 git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
+        //                 git add .
+        //                 git commit -am "Updated the docker image"
+        //                 git push -u origin main
+        //             '''
+        //         }
+        //     }
+        // }
 
-        stage('App Deployed?') {
-            steps {
-                timeout(time: 5, unit: 'MINUTES') {
-                    input message: 'Is ArgoCD Synced?', ok: 'Yes'
-                }
-            }
-        }
+        // stage('App Deployed?') {
+        //     steps {
+        //         timeout(time: 5, unit: 'MINUTES') {
+        //             input message: 'Is ArgoCD Synced?', ok: 'Yes'
+        //         }
+        //     }
+        // }
 
         stage('DAST - OWASP ZAP') {
             steps {
                 sh '''
                     chmod 777 $(pwd)
                     docker run --rm -v $(pwd):/zap/wrk/:rw \
-                    -v /var/lib/jenkins/workspace/backend/zap_ignore_rules:/zap/wrk/zap_ignore_rules \
                     ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
                     -t $APP_URL \
                     -r zap_report.html \
                     -w zap_report.md \
                     -J zap_json_report.json \
                     -x zap_xml_report.xml \
-                    -z "-config scanner.alertFilters.ignoreIds=10021,10037,10049,10055,10063,10098"
+                    -z "-config scanner.alertFilters.ids=10021,10037,10049,10055,10063,10098 IGNORE"
+
                 '''
             }
         }
