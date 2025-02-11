@@ -101,7 +101,7 @@ pipeline {
                     git config --global user.email "narasimhasai.nimmagadda@gmail.com"
                     git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
                     git add .
-                    git commit -am "Updated the docker image"
+                    git commit -am "Updated the docker image ${GIT_COMMIT}"
                     git push -u origin main
 
                     '''
