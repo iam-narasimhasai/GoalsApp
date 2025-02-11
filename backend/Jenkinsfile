@@ -87,7 +87,7 @@ pipeline {
             }
         }
 
-        stage('Docker Image Update') {
+        stage('Deploy to Kubernetes') {
             steps {
                 
                    sh 'git clone -b main https://github.com/iam-narasimhasai/GoalsApp_Manifest'
@@ -101,7 +101,7 @@ pipeline {
                     git config --global user.email "narasimhasai.nimmagadda@gmail.com"
                     git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
                     git add .
-                    git commit -am "Updated the docker image ${GIT_COMMIT}"
+                    git commit -am "Updated the docker image"
                     git push -u origin main
 
                     '''
@@ -110,6 +110,20 @@ pipeline {
             }
         }
 
+stage('DAST - OWASP ZAP') {
+    steps {
+        sh '''
+            chmod 777 $(pwd)
+            docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap2docker-stable zap-baseline.py \
+            -t ${params.APP_URL} \
+            -f openapi \
+            -r zap_report.html \
+            -w zap_report.md \
+            -J zap_json_report.json \
+            -x zap_xml_report.xml
+        '''
+    }
+}
 
 
 
@@ -138,7 +152,16 @@ pipeline {
                 reportName: 'Code Coverage HTML Report', 
                 useWrapperFileDirectly: true
             ])
-
+            publishHTML([
+                allowMissing: true, 
+                alwaysLinkToLastBuild: true, 
+                keepAll: true, 
+                reportDir: '.', 
+                reportFiles: 'zap_report.html', 
+                reportName: 'OWASP ZAP DAST Report', 
+                useWrapperFileDirectly: true
+            ])   
+                   
             publishHTML([
                 allowMissing: true, 
                 alwaysLinkToLastBuild: true, 
