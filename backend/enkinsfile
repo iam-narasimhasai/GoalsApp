@@ -8,9 +8,7 @@ pipeline {
         MONGO_USER = "sai"
         MONGO_PASSWORD = "secret32412"
         PORT = 2121
-        GIT_TOKEN = credentials('githubtoken')
-        
-
+        SONAR_SCANNER_HOME = tool 'sonarqube-scanner-7'
     }
 
     options {
@@ -19,11 +17,11 @@ pipeline {
     }
 
     stages {
-        stage('Git Checkout') {
-            steps {
-                git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
-            }
-        }
+        // stage('Git Checkout') {
+        //     steps {
+        //         git branch: 'pre-prod', url: 'https://github.com/iam-narasimhasai/GoalsApp'
+        //     }
+        // }
 
         stage('Installing Dependencies') {
             options { timestamps() }
@@ -35,7 +33,16 @@ pipeline {
             }
         }
 
+        stage('OWASP Dependency Check') {
+            steps {
+                dependencyCheck additionalArguments: '--scan backend/ --out backend/owasp-report --disableYarnAudit --prettyPrint --format ALL', 
+                                nvdCredentialsId: 'NVD-API-KEY', 
+                                odcInstallation: 'OWASP-DepCheck-12'
 
+                // Uncomment to publish results and fail the build for critical vulnerabilities
+                // dependencyCheckPublisher failedTotalCritical: 1, pattern: 'backend/owasp-report/dependency-check-report.xml', stopBuild: true
+            }
+        }
 
         stage('Run Unit Testing') {
             options { retry(3) }
@@ -58,13 +65,29 @@ pipeline {
             }
         }
 
+        stage('SAST - SonarQube') {
+            steps {
+                timeout(time: 60, unit: 'SECONDS') {
+                    withSonarQubeEnv('sonar-qube-server') {
+                        sh '''
+                            cd backend
+                            echo $SONAR_SCANNER_HOME
 
+                            $SONAR_SCANNER_HOME/bin/sonar-scanner \
+                                -Dsonar.projectKey=GoalsApp \
+                                -Dsonar.sources=app.js \
+                                -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info
+                        '''
+                    }
+                    waitForQualityGate(abortPipeline: true)
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
                 sh '''
                     cd backend/
-                    
                     docker build -t narasimhasai95/goalsapi:${GIT_COMMIT} .
                 '''
             }
@@ -81,34 +104,13 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry(credentialsId: 'docker-creds', url: "") {
+                withDockerRegistry(credentialsId: 'dockerhub-creds', url: "") {
                     sh 'docker push narasimhasai95/goalsapi:${GIT_COMMIT}'
                 }
             }
         }
 
-        stage('Docker Image Update') {
-            steps {
-                
-                   sh 'git clone -b main https://github.com/iam-narasimhasai/GoalsApp_Manifest'
-                   dir("GoalsApp_Manifest") {
-                    sh '''
-                    git checkout main
-                    sed -i "s#narasimhasai95.*#narasimhasai95/goalsapi:${GIT_COMMIT}#g" deploy-backend.yaml
 
-                    cat deploy-backend.yaml
-                    
-                    git config --global user.email "narasimhasai.nimmagadda@gmail.com"
-                    git remote set-url origin https://$GIT_TOKEN@github.com/iam-narasimhasai/GoalsApp_Manifest
-                    git add .
-                    git commit -am "Updated the docker image"
-                    git push -u origin main
-
-                    '''
-                   }
-                
-            }
-        }
 
 
 
@@ -120,12 +122,15 @@ pipeline {
 
     post {
         always {
-            
-            script {
-                if(fileExists('GoalsApp_Manifest')){
-                    sh 'rm -rf GoalsApp_Manifest'
-                }
-            }
+            publishHTML([
+                allowMissing: true, 
+                alwaysLinkToLastBuild: true, 
+                keepAll: true, 
+                reportDir: 'backend/owasp-report', 
+                reportFiles: 'dependency-check-jenkins.html', 
+                reportName: 'Dependency HTML Report', 
+                useWrapperFileDirectly: true
+            ])
 
             junit allowEmptyResults: true, testResults: 'backend/test-results.xml'
 
