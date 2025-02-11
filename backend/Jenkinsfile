@@ -113,7 +113,7 @@ pipeline {
             steps {
                 sh '''
                    docker run --rm -v /var/lib/jenkins/workspace/c:/zap/wrk/:rw \
-                            -v /var/lib/jenkins/workspace/backend/zap_ignore_rules:/zap/wrk/zap_ignore_rules \
+                            -v /var/lib/jenkins/workspace/c/zap_ignore_rules:/zap/wrk/zap_ignore_rules \
                             ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
                             -t $APP_URL \
                             -r zap_report.html \
