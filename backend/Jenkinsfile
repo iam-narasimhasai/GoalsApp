@@ -112,16 +112,15 @@ pipeline {
         stage('DAST - OWASP ZAP') {
             steps {
                 sh '''
-                    chmod 777 $(pwd)
-                    docker run --rm -v $(pwd):/zap/wrk/:rw \
-                    ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                    -t $APP_URL \
-                    -r zap_report.html \
-                    -w zap_report.md \
-                    -J zap_json_report.json \
-                    -x zap_xml_report.xml \
-                    -z "-config scanner.alertFilters.ids=10021,10037,10049,10055,10063,10098 IGNORE"
-
+                   docker run --rm -v /var/lib/jenkins/workspace/c:/zap/wrk/:rw \
+                            -v /var/lib/jenkins/workspace/backend/zap_ignore_rules:/zap/wrk/zap_ignore_rules \
+                            ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                            -t $APP_URL \
+                            -r zap_report.html \
+                            -w zap_report.md \
+                            -J zap_json_report.json \
+                            -x zap_xml_report.xml \
+                            -z "-configfile /zap/wrk/zap_ignore_rules/alert_filters.context"
                 '''
             }
         }
