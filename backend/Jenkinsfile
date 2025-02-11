@@ -113,7 +113,9 @@ pipeline {
             steps {
                 sh '''
                     chmod 777 $(pwd)
-                    docker run --rm -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                    docker run --rm -v $(pwd):/zap/wrk/:rw \
+                    -v /var/lib/jenkins/workspace/backend/zap_ignore_rules:/zap/wrk/zap_ignore_rules \
+                    ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
                     -t $APP_URL \
                     -r zap_report.html \
                     -w zap_report.md \
