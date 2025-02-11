@@ -114,7 +114,7 @@ stage('DAST - OWASP ZAP') {
     steps {
         sh '''
             chmod 777 $(pwd)
-            docker run --rm -v $(pwd):/zap/wrk/:rw owasp/zap-stable zap-baseline.py \
+            docker run --rm -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
             -t $APP_URL \
             -f openapi \
             -r zap_report.html \
